@@ -17,11 +17,22 @@ function fetchData(url) {
     return fetch(url).then(response => response.json());
 }
 
+// Function to update cell value
+function updateCellValue(cellId, value) {
+    const cell = document.getElementById(cellId);
+    cell.textContent = value;
+}
+
 // Use Promise.all() to fetch data from all API URLs concurrently
 Promise.all(apiUrls.map(fetchData))
     .then(dataArray => {
-        // Here, dataArray contains an array of responses from all API calls
-        console.log(dataArray);
+        const allTime = dataArray.reduce((total, data) => total + data.id, 0);
+        updateCellValue("output-all", allTime);
+
+        return Promise.any(apiUrls.map(fetchData));
+    })
+    .then(data => {
+        updateCellValue("output-any", data.id);
     })
     .catch(error => {
         console.error("An error occurred:", error);
