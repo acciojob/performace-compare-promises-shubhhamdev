@@ -12,4 +12,17 @@ const apiUrls = [
   "https://jsonplaceholder.typicode.com/todos/10",
 ];
 
-// You can write your code here
+// Function to fetch data from an API URL
+function fetchData(url) {
+    return fetch(url).then(response => response.json());
+}
+
+// Use Promise.all() to fetch data from all API URLs concurrently
+Promise.all(apiUrls.map(fetchData))
+    .then(dataArray => {
+        // Here, dataArray contains an array of responses from all API calls
+        console.log(dataArray);
+    })
+    .catch(error => {
+        console.error("An error occurred:", error);
+    });
